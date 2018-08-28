@@ -1,4 +1,4 @@
-import { ProxyObject, Logger } from '../utils';
+import { Logger } from '../utils';
 import DocumentWalker from './document-walker';
 import Translator from './translator';
 
@@ -17,9 +17,8 @@ const ALLSPEAK_INFO_STYLE = `background: #467972;
   padding: .5em 1em;
   border-radius: 1.5em;`;
 
-export default class Allspeak extends ProxyObject {
+export default class Allspeak {
   constructor(translations = {}, options = {}) {
-    super(...arguments);
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
 
     /* develblock:start */
