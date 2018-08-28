@@ -3,12 +3,12 @@ import DocumentWalker from './document-walker';
 import Translator from './translator';
 
 export const DEFAULT_OPTIONS = {
-  isRaw: false,
   dataKey: 'data-key',
-  defaultLocale: 'en',
-  defaultOnMissing: true,
-  rootElement: document.body,
   debug: false,
+  defaultLocale: 'en',
+  defaultOnMissing: false,
+  escapeTranslation: true,
+  rootElement: document.body,
 };
 
 const ALLSPEAK_INFO_STYLE = `background: #467972;
@@ -61,7 +61,7 @@ export default class Allspeak extends ProxyObject {
         this.options
       );
 
-      if (this.options.isRaw) {
+      if (!this.options.escapeTranslation) {
         /* develblock:start */
         Logger.log('- Applying raw translation...');
         /* develblock:end */
