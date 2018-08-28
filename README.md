@@ -43,7 +43,8 @@ const translations = {
 
 const options = {
   dataKey: 'data-key',        // Attribute key used to lookup the translations
-  debug: false,               // Prints debug information to the console. Does not work in production builds.
+  debug: false,               // Prints debug information to the console.
+                              //   Does not work in production builds.
   defaultLocale: 'en',        // Locale to default to if no translation is found
   defaultOnMissing: false,    // Attempt to translate to defaultLocale on missing translation
   escapeTranslation: true,    // Escape the translation results. If false, outputs HTML.
