@@ -1,4 +1,4 @@
-# Allspeak
+# Allspeak<br/>ᚨᛚᛚᛊᛈᛖᚨᚲ
 
 Front-end standalone i18n library
 
