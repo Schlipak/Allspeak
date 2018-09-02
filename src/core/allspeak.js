@@ -4,10 +4,12 @@ import Translator from './translator';
 
 export const DEFAULT_OPTIONS = {
   dataKey: 'data-key',
+  dataMissingTranslation: 'data-missing-translation',
   debug: false,
   defaultLocale: 'en',
   defaultOnMissing: false,
   escapeTranslation: true,
+  hideDuringTrans: false,
   rootElement: document.body,
 };
 
@@ -25,6 +27,35 @@ export default class Allspeak {
     Logger.setDebugMode(this.options.debug);
     /* develblock:end */
 
+    if (this.options.hideDuringTrans) {
+      this.options.rootElement.style = 'display: none;';
+    }
+
+    return new Promise((resolve, reject) => {
+      if (typeof translations === typeof '') {
+        fetch(translations, { method: 'GET' })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+
+            throw new Error(`Request rejected with status ${response.status}`);
+          })
+          .then(json => {
+            this.__initialize(json);
+            resolve(this);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      } else {
+        this.__initialize(translations);
+        resolve(this);
+      }
+    });
+  }
+
+  __initialize(translations) {
     Object.defineProperty(this, 'translator', {
       value: new Translator(translations),
       enumerable: false,
@@ -46,7 +77,7 @@ export default class Allspeak {
 
   trans(locale) {
     /* develblock:start */
-    Logger.info(`=== Translating document to ${locale}`);
+    Logger.info(`=== Translating document to locale ${locale}`);
     /* develblock:end */
 
     this.documentWalker.walk(locale, (node, key, locale) => {
@@ -54,7 +85,7 @@ export default class Allspeak {
       Logger.log(`-- Starting translation for '${key}'`);
       /* develblock:end */
 
-      const rawTranslation = this.translator.getTranslation(
+      const translation = this.translator.getTranslation(
         key,
         locale,
         this.options
@@ -65,7 +96,7 @@ export default class Allspeak {
         Logger.log('- Applying raw translation...');
         /* develblock:end */
 
-        node.innerHTML = rawTranslation;
+        node.innerHTML = translation.text;
       } else {
         /* develblock:start */
         Logger.log('- Applying escaped translation...');
@@ -73,8 +104,16 @@ export default class Allspeak {
 
         const escapedTranslation = document.createElement('DIV');
 
-        escapedTranslation.appendChild(document.createTextNode(rawTranslation));
+        escapedTranslation.appendChild(
+          document.createTextNode(translation.text)
+        );
         node.innerHTML = escapedTranslation.innerHTML;
+      }
+
+      if (translation.missing) {
+        node.setAttribute(this.options.dataMissingTranslation, '');
+      } else {
+        node.removeAttribute(this.options.dataMissingTranslation);
       }
 
       /* develblock:start */
@@ -87,5 +126,8 @@ export default class Allspeak {
     /* develblock:end */
 
     this.options.rootElement.setAttribute('lang', locale);
+    if (this.options.hideDuringTrans) {
+      this.options.rootElement.style = '';
+    }
   }
 }

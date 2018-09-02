@@ -7,6 +7,15 @@ export default class DocumentWalker {
   }
 
   walk(locale, callback) {
+    if (this.root.getAttribute('lang') === locale) {
+      /* develblock:start */
+      Logger.info(
+        `=== Skipping translation, root is already in locale ${locale}`
+      );
+      /* develblock:end */
+      return;
+    }
+
     /* develblock:start */
     Logger.log('Walking document...');
     /* develblock:end */

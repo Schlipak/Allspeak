@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Allspeak | Example</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Fira+Mono|Nunito:400,700" rel="stylesheet">
+  <style>
+    html,
+    body {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 3em;
+      font-family: 'Fira Mono', 'Courier New', Courier, monospace;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    h1 {
+      position: relative;
+      font-size: 2.5em;
+    }
+
+    h1 > .sub {
+      opacity: 0.1;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: stretch;
+      margin-bottom: 1em;
+    }
+
+    .row>*:not(:last-child) {
+      margin-right: 0.5em;
+    }
+
+    select,
+    option,
+    button {
+      font-size: 1em;
+      font-family: 'Nunito', Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    [data-key]:not(button) {
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    [data-key]:not(button):not(:last-child) {
+      margin-bottom: 0.5em;
+    }
+
+    [data-key]:not(button):before {
+      content: attr(data-key);
+      display: inline-block;
+      width: 20ch;
+      margin-right: 0.5em;
+      padding: 0.2em 0;
+      padding-left: 2.5ch;
+
+      text-align: center;
+      background-color: #ddd;
+      border-radius: 2px;
+    }
+
+    [data-key]:not(button):after {
+      content: '🔑';
+      display: inline-block;
+      position: absolute;
+      padding: 0.2em 0;
+      padding-left: 0.4em;
+      top: 0;
+      left: 0;
+    }
+
+    [data-missing-translation] {
+      color: #c03030;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>
+    <span>Allspeak</span>
+    <div class="sub">ᚨᛚᛚᛊᛈᛖᚨᚲ</div>
+  </h1>
+
+  <div class="row">
+    <select name="lang" id="lang">
+      <option value="en">English</option>
+      <option value="fr">Français</option>
+      <option value="ja">日本語</option>
+      <option value="gbk">Gobbledygook</option>
+    </select>
+    <button id="button" data-key="button.translate">Translate</button>
+  </div>
+
+  <div data-key="demo">This is a demo key</div>
+  <div data-key="nested.key">This is a nested key</div>
+  <div data-key="missing.key">This is a missing translation key</div>
+  <div data-key="missing.english">This is a missing english translation</div>
+  <div data-key="missing.french">This is a missing french translation</div>
+
+  <script src="../dist/allspeak.pkg.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const select = document.getElementById('lang');
+      const button = document.getElementById('button');
+
+      new Allspeak('translations.json', { debug: true }).then(speak => {
+        button.addEventListener('click', function () {
+          speak.trans(select[select.selectedIndex].value);
+        });
+      });
+
+    });
+  </script>
+</body>
+
+</html>

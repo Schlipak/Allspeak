@@ -41,17 +41,25 @@ const translations = {
   },
 };
 
+// Translations can also be loaded from a JSON file
+// Simply replace the translation object with a string URL of the file
+
 const options = {
   dataKey: 'data-key',        // Attribute key used to lookup the translations
+
+                              // Attribute added to a node when its translation is missing
+  dataMissingTranslation: 'data-missing-translation',
+
   debug: false,               // Prints debug information to the console.
-                              //   Does not work in production builds.
+                              // > Does nothing in production builds.
   defaultLocale: 'en',        // Locale to default to if no translation is found
   defaultOnMissing: false,    // Attempt to translate to defaultLocale on missing translation
-  escapeTranslation: true,    // Escape the translation results. If false, outputs HTML.
+                              // > A `Missing translation` message will be displayed if false
+  escapeTranslation: true,    // Escape the translation results. If false, outputs raw HTML.
+  hideDuringTrans: false,     // Hides the scope during translation to prevent seeing the content flash
+                              // Only use this option if you are going to translate the document right away
   rootElement: document.body, // Scope in which translations are applied
 };
-
-const speak = new Allspeak(translations, options);
 
 /*
 Use Allspeak#trans to translate the document
@@ -70,5 +78,7 @@ const translations = {
 The key 'foo' will be translated as 'bar' no matter the regional english locale, but the
 key 'colour' will be translated accordingly.
 */
-speak.trans(navigator.language);
+new Allspeak(translations, options).then(speak => {
+  speak.trans(navigator.language);
+});
 ```

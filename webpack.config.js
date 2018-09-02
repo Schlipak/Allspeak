@@ -1,4 +1,7 @@
 const path = require('path');
+const devMode = process.env.NODE_ENV !== 'production';
+
+console.log(`>>> Building in ${devMode ? 'development' : 'production'} mode`);
 
 module.exports = {
   entry: './src/index.js',
@@ -12,7 +15,7 @@ module.exports = {
         test: /\.js$/,
         enforce: 'pre',
         exclude: /(node_modules|bower_components|\.spec\.js)/,
-        use: [{ loader: 'webpack-strip-block' }],
+        use: devMode ? [] : [{ loader: 'webpack-strip-block' }],
       },
     ],
   },

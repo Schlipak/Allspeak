@@ -28,7 +28,7 @@
     "lint": "eslint src/ $npm_package_main",
     "trans": "babel $npm_package_main src/ --out-dir tmp/",
     "pack_dev": "webpack --mode development tmp/$npm_package_main -o dist/allspeak.pkg.js",
-    "pack": "webpack --mode production tmp/$npm_package_main -o dist/allspeak.pkg.min.js",
+    "pack": "NODE_ENV=production webpack --mode production tmp/$npm_package_main -o dist/allspeak.pkg.min.js",
     "prelude": "mkdir -p dist/ tmp/ && npm run clean && npm run lint && npm run trans",
     "dev": "npm run prelude && npm run pack_dev",
     "build": "npm run prelude && npm run pack",

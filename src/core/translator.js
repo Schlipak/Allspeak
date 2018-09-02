@@ -28,7 +28,7 @@ export default class Translator {
         Logger.log(`Found translation for '${fullKey}.${locale}'`);
         /* develblock:end */
 
-        return translations[key][locale];
+        return { text: translations[key][locale], missing: false };
       } else {
         if (locale.includes('-')) {
           const superLocale = locale.split('-')[0];
@@ -70,7 +70,10 @@ export default class Translator {
         Logger.error(`Missing translation for '${fullKey}.${locale}'`);
         /* develblock:end */
 
-        return `Missing translation: ${fullKey}.${locale}`;
+        return {
+          text: `Missing translation: ${fullKey}.${locale}`,
+          missing: true,
+        };
       }
     }
 
@@ -80,7 +83,7 @@ export default class Translator {
       const subKey = segments.join('.');
 
       /* develblock:start */
-      Logger.warn(
+      Logger.info(
         `Missing top-level translation for '${fullKey}.${locale}', trying sub-key '${subKey}.${locale}'`
       );
       /* develblock:end */
@@ -116,6 +119,6 @@ export default class Translator {
     Logger.error(`Missing translation for '${fullKey}.${locale}'`);
     /* develblock:end */
 
-    return `Missing translation: ${fullKey}.${locale}`;
+    return { text: `Missing translation: ${fullKey}.${locale}`, missing: true };
   }
 }

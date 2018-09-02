@@ -6,7 +6,6 @@ export default {
     this.isDebugMode = state;
   },
 
-  /* develblock:start */
   debug() {
     if (this.isDebugMode) {
       console.debug(...arguments);
@@ -40,6 +39,5 @@ export default {
   style(message, style) {
     this.log(`%c${message}`, style);
   },
-  /* develblock:end */
 };
 /* eslint-enable no-console */
