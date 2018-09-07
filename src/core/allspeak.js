@@ -71,6 +71,13 @@ export default class Allspeak {
       writable: false,
     });
 
+    Object.defineProperty(this, 'translations', {
+      value: translations,
+      enumerable: true,
+      configurable: false,
+      writable: false,
+    });
+
     Object.defineProperty(this, 'scopes', {
       value: {},
       enumerable: false,
