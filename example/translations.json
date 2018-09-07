@@ -1,36 +1,57 @@
 {
-  "button": {
-    "translate": {
-      "en": "Translate",
-      "fr": "Traduire",
-      "ja": "翻訳する",
-      "gbk": "Wolakare"
+  "title": {
+    "en": "Front-end i18n library",
+    "fr": "Librairie i18n front-end",
+    "ja": "フロントエンドi18nライブラリ",
+    "ga": "I18n leabharlann tosaigh",
+    "lol": "FRUNT-END I18N LIBRARY"
+  },
+  "controls": {
+    "label": {
+      "en": "Language",
+      "fr": "Langue",
+      "ja": "言語",
+      "ga": "Teanga",
+      "lol": "LANGUAEG"
+    },
+    "button": {
+      "translate": {
+        "en": "Translate",
+        "fr": "Traduire",
+        "ja": "翻訳",
+        "ga": "Aistrigh",
+        "lol": "TRANZLATE"
+      }
     }
   },
   "demo": {
     "en": "This is a demo translation in English",
     "fr": "Ceci est une traduction d'example en français",
     "ja": "これは日本語の翻訳例です",
-    "gbk": "Wowa shi an wolakasi su djamanakla zi Gobbledygook"
+    "ga": "Seo sampla aistriúcháin i nGaeilge",
+    "lol": "DIS AR TEH DEMO TRANZLASHUN IN LOLCAT"
   },
   "nested": {
     "key": {
       "en": "This is a demo translation for a nested key in English",
       "fr": "Ceci est une traduction d'example pour une clé imbriquée en français",
       "ja": "これは日本語のネストされたキーの翻訳例です",
-      "gbk": "Wowa shi an wolakasi su djamanakla fow an kli momasti zi Gobbledygook"
+      "ga": "Seo sampla aistriúchán ar eochair neadaithe i nGaeilge",
+      "lol": "DIS AR TEH DEMO TRANZLASHUN 4 NESTD KEY IN LOLCAT"
     }
   },
   "missing": {
     "english": {
       "fr": "Cette traduction n'existe pas en englais",
       "ja": "この翻訳は英語では存在しません",
-      "gbk": "Woshi wolakasi nil ferishima zi englisi"
+      "ga": "Níl an t-aistriúchán seo ann i mBéarla",
+      "lol": "DIS TRANZLASHUN DOEZ NOT EXIS IN ENGLISH"
     },
     "french": {
       "en": "This translation does not exist in French",
       "ja": "この翻訳はフランス語では存在しません",
-      "gbk": "Woshi wolakasi nil ferishina zi frensi"
+      "ga": "Níl an t-aistriúchán seo ann i bhFraincis",
+      "lol": "DIS TRANZLASHUN DOEZ NOT EXIS IN FRENCH"
     }
   }
 }

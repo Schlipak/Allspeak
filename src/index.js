@@ -1,5 +1,5 @@
-import Allspeak from './core/allspeak';
-export * from './core/allspeak';
+export * from './core';
+import Allspeak from './core';
 
 if (window) {
   window.Allspeak = Allspeak;

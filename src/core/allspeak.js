@@ -11,6 +11,7 @@ export const DEFAULT_OPTIONS = {
   escapeTranslation: true,
   hideDuringTrans: false,
   rootElement: document.body,
+  scopeKey: 'data-scope',
 };
 
 const ALLSPEAK_INFO_STYLE = `background: #467972;
@@ -64,23 +65,47 @@ export default class Allspeak {
     });
 
     Object.defineProperty(this, 'documentWalker', {
-      value: new DocumentWalker(this.options.rootElement, this.options.dataKey),
+      value: new DocumentWalker(this.options.dataKey),
       enumerable: false,
       configurable: false,
       writable: false,
     });
 
+    Object.defineProperty(this, 'scopes', {
+      value: {},
+      enumerable: false,
+      configurable: false,
+      writable: true,
+    });
+
     /* develblock:start */
-    Logger.style('Allspeak // Front-end i18n', ALLSPEAK_INFO_STYLE);
+    Logger.style('Allspeak // Front-end i18n library', ALLSPEAK_INFO_STYLE);
     /* develblock:end */
   }
 
-  trans(locale) {
+  trans(locale, scope = this.options.rootElement, ...otherScopes) {
+    if (typeof scope === typeof '') {
+      if (this.scopes[scope]) {
+        scope = this.scopes[scope];
+      } else {
+        const scopeElement = document.querySelector(
+          `[${this.options.scopeKey}="${scope}"]`
+        );
+        this.scopes[scope] = scopeElement;
+
+        /* develblock:start */
+        Logger.info('Caching element', scopeElement, `with scope "${scope}"`);
+        /* develblock:end */
+
+        scope = scopeElement;
+      }
+    }
+
     /* develblock:start */
-    Logger.info(`=== Translating document to locale ${locale}`);
+    Logger.info('=== Translating scope', scope, `to locale ${locale}`);
     /* develblock:end */
 
-    this.documentWalker.walk(locale, (node, key, locale) => {
+    this.documentWalker.walk(locale, scope, (node, key, locale) => {
       /* develblock:start */
       Logger.log(`-- Starting translation for '${key}'`);
       /* develblock:end */
@@ -125,9 +150,13 @@ export default class Allspeak {
     Logger.info('=== Finished document translation');
     /* develblock:end */
 
-    this.options.rootElement.setAttribute('lang', locale);
+    scope.setAttribute('lang', locale);
     if (this.options.hideDuringTrans) {
-      this.options.rootElement.style = '';
+      scope.style = '';
+    }
+
+    if (otherScopes && otherScopes.length) {
+      this.trans(locale, ...otherScopes);
     }
   }
 }

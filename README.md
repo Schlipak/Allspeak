@@ -58,27 +58,42 @@ const options = {
   escapeTranslation: true,    // Escape the translation results. If false, outputs raw HTML.
   hideDuringTrans: false,     // Hides the scope during translation to prevent seeing the content flash
                               // Only use this option if you are going to translate the document right away
-  rootElement: document.body, // Scope in which translations are applied
+  rootElement: document.body, // Default scope in which translations are applied
+  scopeKey: 'data-scope',     // Attribute used to lookup translation scopes by name
 };
 
-/*
-Use Allspeak#trans to translate the document
-Allspeak handles regional locales:
-
-const translations = {
-  colour: {
-    'en-GB': 'colour',
-    'en-US': 'color',
-  },
-  foo: {
-    en: 'bar',
-  },
-};
-
-The key 'foo' will be translated as 'bar' no matter the regional english locale, but the
-key 'colour' will be translated accordingly.
+/**
+ * Use Allspeak#trans to translate the document
+ * Allspeak handles regional locales:
+ *
+ * const translations = {
+ *   colour: {
+ *     'en-GB': 'colour',
+ *     'en-US': 'color',
+ *   },
+ *   foo: {
+ *     en: 'bar',
+ *   },
+ * };
+ *
+ * The key 'foo' will be translated as 'bar' no matter the regional english locale, but the
+ * key 'colour' will be translated accordingly.
 */
 new Allspeak(translations, options).then(speak => {
-  speak.trans(navigator.language);
+  /**
+   * scopes : HTMLElement|string
+   *
+   * Scope in which translations are applied
+   * Optional, defaults to options.rootElement
+   * Scope can be specified as a string, in which case the corresponding element will be
+   * located according to the value of the option.scopeKey attribute.
+   *
+   * String-specified scopes are cached after the first fetch.
+   *
+   * You can specify multiple scopes to translate at once.
+   */
+  const scopes = [document.body];
+
+  speak.trans(navigator.language, ...scopes);
 });
 ```

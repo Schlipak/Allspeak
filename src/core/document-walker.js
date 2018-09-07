@@ -1,13 +1,12 @@
 import { Logger } from '../utils';
 
 export default class DocumentWalker {
-  constructor(root, dataKey) {
-    this.root = root;
+  constructor(dataKey) {
     this.dataKey = dataKey;
   }
 
-  walk(locale, callback) {
-    if (this.root.getAttribute('lang') === locale) {
+  walk(locale, scope, callback) {
+    if (scope.getAttribute('lang') === locale) {
       /* develblock:start */
       Logger.info(
         `=== Skipping translation, root is already in locale ${locale}`
@@ -20,7 +19,7 @@ export default class DocumentWalker {
     Logger.log('Walking document...');
     /* develblock:end */
 
-    Array.from(this.root.querySelectorAll(`[${this.dataKey}]`)).forEach(
+    Array.from(scope.querySelectorAll(`[${this.dataKey}]`)).forEach(
       element => {
         const key = element.getAttribute(this.dataKey);
 

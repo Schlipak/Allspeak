@@ -1,4 +1,5 @@
 import { Logger } from '../utils';
+import { DEFAULT_OPTIONS } from '.';
 
 export default class Translator {
   constructor(translations) {
@@ -8,10 +9,12 @@ export default class Translator {
   getTranslation(
     key,
     locale,
-    options,
+    options = {},
     translations = this.translations,
     fullKey = key
   ) {
+    options = Object.assign({}, DEFAULT_OPTIONS, options);
+
     if (fullKey === key) {
       /* develblock:start */
       Logger.log(`Translating key '${key}.${locale}'`);
@@ -22,8 +25,8 @@ export default class Translator {
       /* develblock:end */
     }
 
-    if (translations[key]) {
-      if (translations[key][locale]) {
+    if (typeof translations[key] === typeof {}) {
+      if (typeof translations[key][locale] === typeof '') {
         /* develblock:start */
         Logger.log(`Found translation for '${fullKey}.${locale}'`);
         /* develblock:end */
