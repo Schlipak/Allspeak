@@ -25,7 +25,7 @@
 
     body {
       padding: 3em;
-      font-family: 'Fira Mono', 'Courier New', Courier, monospace;
+      font-family: 'Nunito', Verdana, Geneva, Tahoma, sans-serif;
     }
 
     *,
@@ -37,11 +37,13 @@
     h1 {
       position: relative;
       font-size: 2.5em;
+      font-family: 'Fira Mono', 'Courier New', Courier, monospace;
     }
 
     h1>.sub {
       font-size: 0.75em;
       opacity: 0.75;
+      font-family: 'Nunito', Verdana, Geneva, Tahoma, sans-serif;
     }
 
     h1>.super-sub {
@@ -75,7 +77,6 @@
     option,
     button {
       font-size: 1em;
-      font-family: 'Nunito', Verdana, Geneva, Tahoma, sans-serif;
     }
 
     select,
@@ -167,6 +168,7 @@
       padding: 0.2em 0;
       padding-left: 2.5ch;
 
+      font-family: 'Fira Mono', 'Courier New', Courier, monospace;
       text-align: center;
       background-color: #ddd;
       border-radius: 0.2em;
@@ -196,7 +198,7 @@
     }
 
     .scope:before {
-      content: 'Scope "'attr(data-scope)'", translates 'attr(data-scope-strategy);
+      content: attr(data-before);
       display: block;
       position: absolute;
       top: 0;
@@ -212,12 +214,38 @@
       transition: color 0.2s;
     }
 
+    .scope[data-scope-strategy]:before {
+      content: 'Scope "'attr(data-scope)'", translated 'attr(data-scope-strategy);
+    }
+
     .scope:hover {
       border-color: rgba(0, 0, 0, 0.1);
     }
 
     .scope:hover:before {
       color: rgba(0, 0, 0, 0.6);
+    }
+
+    pre {
+      overflow: hidden;
+      height: 0;
+      margin: 0;
+      opacity: 0;
+      font-family: 'Fira Mono', 'Courier New', Courier, monospace;
+
+      transition: height 0.2s, margin 0.2s, opacity 0.2s;
+      will-change: height, margin;
+    }
+
+    input[type="checkbox"] + label {
+      user-select: none;
+
+    }
+
+    input[type="checkbox"]:checked ~ pre {
+      margin-top: 2em;
+      height: unset;
+      opacity: 1;
     }
   </style>
 </head>
@@ -239,14 +267,14 @@
           <option value="fr">Français</option>
           <option value="ga">Gaeilge</option>
           <option value="ja">日本語</option>
-          <option value="lol">LOLCAT</option>
+          <option value="zlg"≯̵̴̸̨Z͞͝Á̢͜L҉̕G̀͘͘҉O͟͞!҉̀</option>
         </select>
       </div>
       <button id="button" data-key="controls.button.translate">Translate</button>
     </div>
   </div>
 
-  <main id="main" class="scope" data-scope="main" data-scope-strategy="on click">
+  <main id="main" class="row native-flow scope" data-scope="main" data-scope-strategy="on click">
     <div data-key="demo">DEFAULT: This is a demo key</div>
     <div data-key="nested.key">DEFAULT: This is a nested key</div>
     <div data-key="missing.key">DEFAULT: This is a missing translation key</div>
@@ -254,11 +282,20 @@
     <div data-key="missing.french">DEFAULT: This is a missing french translation</div>
   </main>
 
-  <script src="allspeak.pkg.js"></script>
+  <div class="row native-flow scope" data-scope="source" data-scope-strategy="on selection change">
+    <input type="checkbox" name="showCode" id="showCode">
+    <label for="showCode" class="no-key-decoration" data-key="source.label">Show translation source</label>
+    <pre>
+<code id="code">Missing translation source</code>
+    </pre>
+  </div>
+
+  <script src="../dist/allspeak.pkg.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const main = document.getElementById('main');
       const controls = document.getElementById('controls');
+      const code = document.getElementById('code');
 
       const select = document.getElementById('lang');
       const button = document.getElementById('button');
@@ -267,8 +304,10 @@
         rootElement: main,
         debug: true
       }).then(speak => {
+        code.innerHTML = JSON.stringify(speak.translations, null, 2);
+
         select.addEventListener('change', function () {
-          speak.trans(select[select.selectedIndex].value, 'controls');
+          speak.trans(select[select.selectedIndex].value, 'controls', 'source');
         });
 
         button.addEventListener('click', function () {
