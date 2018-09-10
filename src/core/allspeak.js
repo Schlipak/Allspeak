@@ -14,11 +14,13 @@ export const DEFAULT_OPTIONS = {
   scopeKey: 'data-scope',
 };
 
+/* develblock:start */
 const ALLSPEAK_INFO_STYLE = `background: #467972;
   color: #FFF;
   font-size: 1.5em;
   padding: .5em 1em;
   border-radius: 1.5em;`;
+/* develblock:end */
 
 export default class Allspeak {
   constructor(translations = {}, options = {}) {
