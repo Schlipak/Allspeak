@@ -3,24 +3,21 @@
     "en": "Front-end i18n library",
     "fr": "Librairie i18n front-end",
     "ja": "フロントエンドi18nライブラリ",
-    "ga": "I18n leabharlann tosaigh",
-    "zlg": "F̧r̕ó́͜n̨t́͘-e̶̷nd͢ ͢҉í18͞n̴͟ ̢̨ļ̕į́͝b́r͟͡ą̸r̀y̨̛"
+    "ga": "I18n leabharlann tosaigh"
   },
   "controls": {
     "label": {
       "en": "Language",
       "fr": "Langue",
       "ja": "言語",
-      "ga": "Teanga",
-      "zlg": "L̵a̷n͘͜g̸ù̕ag͜e͞"
+      "ga": "Teanga"
     },
     "button": {
       "translate": {
         "en": "Translate",
         "fr": "Traduire",
         "ja": "翻訳",
-        "ga": "Aistrigh",
-        "zlg": "T̶̛r̴͘a̸n̵s̴͢l̨҉at͡͏e̷̕͘"
+        "ga": "Aistrigh"
       }
     }
   },
@@ -28,33 +25,26 @@
     "en": "This is a demo translation in English",
     "fr": "Ceci est une traduction d'example en français",
     "ja": "これは日本語の翻訳例です",
-    "ga": "Seo sampla aistriúcháin i nGaeilge",
-    "zlg": "IT̴o̧ i̶nv̢̀o̧̢k̕͟e̛̛ ̀҉t͡h̡̛e̛͟ h̵͢i̵̷v̶́e̡-̢̡͘m̢i̷͢ńd́ ̵̕r̷̴eprè͡s̶̛en͠t̨͡i̴̧͟n̡͟g̵̸ ̨́͝c̸h́͟a̢̛o̶̶͢s̴.҉̨"
+    "ga": "Seo sampla aistriúcháin i nGaeilge"
   },
   "nested": {
     "key": {
       "en": "This is a demo translation for a nested key in English",
       "fr": "Ceci est une traduction d'example pour une clé imbriquée en français",
       "ja": "これは日本語のネストされたキーの翻訳例です",
-      "ga": "Seo sampla aistriúcháin de eochair neadaithe i nGaeilge",
-      "zlg": "I͟n͢v͝o͡kįn̴̶g̷̡͘ ̶̶҉t̸́ḩ̕e ҉̕f̵ee̕l̢̧i̵n҉g̸̀͘ o̸͠f͏ ̨͞c͘͘ḩ̷ą́͠o̸s͏.̨"
+      "ga": "Seo sampla aistriúcháin de eochair neadaithe i nGaeilge"
     }
   },
   "missing": {
-    "key": {
-      "zlg": "͡͏͡W̢í̷̕th ou̶͝t͏̷͜ ͡͏o͠r͟d҉̡e̵͘r."
-    },
     "english": {
       "fr": "Cette traduction n'existe pas en englais",
       "ja": "この翻訳は英語では存在しません",
-      "ga": "Níl an t-aistriúchán seo ann i mBéarla",
-      "zlg": "T̴̸h҉ę͟ ̸̧̨N̴e̷z̨p̴e͞͡rd̛͝i̢a̷n̴̢͟ ̵̶̀h͟íve̸-̨́m̴͡͠i͞nd̛ ͡of͞ ͜c̵͏h̀aó̕s͢.҉͏͠ ͟Z̨͜a̢l͞g͏̢ò͜͝.̨͜͝"
+      "ga": "Níl an t-aistriúchán seo ann i mBéarla"
     },
     "french": {
       "en": "This translation does not exist in French",
       "ja": "この翻訳はフランス語では存在しません",
-      "ga": "Níl an t-aistriúchán seo ann i bhFraincis",
-      "zlg": "̸̴̕H͞e w̷h̴͞o͢ ̸̨͘Wa͏̛i͡ts ̕͠B҉̕͠e͢h̸̀i̶n͞d͡ ̴T͏̢͞h͘e̴ ͡Waĺl̕."
+      "ga": "Níl an t-aistriúchán seo ann i bhFraincis"
     }
   },
   "source": {
@@ -62,8 +52,7 @@
       "en": "Show translation source",
       "fr": "Afficher les données de traduction",
       "ja": "翻訳データを表示する",
-      "ga": "Taispeáin foinse aistriúcháin",
-      "zlg": "H̸̵̸͡e̢̨̡̨ ̵̢̕c̀̕o̴̧͘͞m̢͠e̸̷͟͝͏s̢̀͟͢"
+      "ga": "Taispeáin foinse aistriúcháin"
     }
   }
 }
