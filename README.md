@@ -12,6 +12,8 @@ git clone https://github.com/Schlipak/Allspeak.git
 
 ## Usage
 
+Import the Allspeak package in your HTML
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +27,14 @@ git clone https://github.com/Schlipak/Allspeak.git
 </body>
 </html>
 ```
+
+Or use the ES6 import in your JavaScript
+
+```js
+import Allspeak from 'allspeak';
+```
+
+Script your translations
 
 ```js
 // Define your translations
