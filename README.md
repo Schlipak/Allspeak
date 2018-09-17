@@ -55,10 +55,15 @@ const translations = {
 // Simply replace the translation object with a string URL of the file
 
 const options = {
+  asyncLoad: false,           // Changes the translation loading strategy to async
+                              // > See `Asynchronously load translations`
   dataKey: 'data-key',        // Attribute key used to lookup the translations
 
                               // Attribute added to a node when its translation is missing
   dataMissingTranslation: 'data-missing-translation',
+
+                              // Attribute added to a node during its translation
+  dataTranslatingKey: 'data-translating',
 
   debug: false,               // Prints debug information to the console.
                               // > Does nothing in production builds.
@@ -67,7 +72,7 @@ const options = {
                               // > A `Missing translation` message will be displayed if false
   escapeTranslation: true,    // Escape the translation results. If false, outputs raw HTML.
   hideDuringTrans: false,     // Hides the scope during translation to prevent seeing the content flash
-                              // Only use this option if you are going to translate the document right away
+                              // > Only use this option if you are translating the document right away
   rootElement: document.body, // Default scope in which translations are applied
   scopeKey: 'data-scope',     // Attribute used to lookup translation scopes by name
 };
@@ -105,5 +110,41 @@ new Allspeak(translations, options).then(speak => {
   const scopes = [document.body];
 
   speak.trans(navigator.language, ...scopes);
+});
+```
+
+## Asynchronously load translations
+
+By default, Allspeak will load a single JSON blob, which is expected to contain all your translations.
+
+If your application has a loarge amount of translations, this may be detrimental, as it will load a large amount
+of data at once, and slow down your application.
+
+You can instead separate your translations into different files, and use the `asyncLoad` option.
+With `asyncLoad: true`, Allspeak will expect a translation URL in the form `path/to/translations.{}.json` where `{}` is a placeholder which will be replaced by the locale.
+In this example, you will need to create a file named `translations.en.json` for your English locales.
+
+Locale resolutions will work the same as in synchronous mode ; it will attempt to use regional locales where relevant, and fallback to a more general locale if not found.
+
+Please note that the `Allspeak#trans` method will now return a Promise when used in async mode.
+
+```js
+new Allspeak('translations/{}.json', { asyncLoad: true }).then(speak => {
+  speak.trans(navigator.language).then(() => {
+    // After async translation
+  });
+});
+```
+
+You can retreive the current in-memory translation data using the `Allspeak.translations` property. You can also subscribe to `onTranslationLoaded` to be notified when translation data changes:
+
+```js
+new Allspeak('translations/{}.json', { asyncLoad: true }).then(speak => {
+  // ...
+
+  speak.onTranslationLoaded(translations => {
+    // Do something with the new translation data.
+    // In async mode, newly loaded translations do not replace the data, they are appended.
+  });
 });
 ```

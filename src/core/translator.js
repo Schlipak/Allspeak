@@ -6,7 +6,59 @@ export default class Translator {
     this.translations = translations;
   }
 
+  preload(translations = this.translations, assign = true) {
+    return new Promise((resolve, reject) => {
+      if (typeof translations === typeof '') {
+        // Path given
+
+        fetch(translations, { method: 'GET' })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+
+            throw new Error(`Request rejected with status ${response.status}`);
+          })
+          .then(json => {
+            if (assign) this.translations = json;
+            resolve(json);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      } else {
+        // Translation Object given
+
+        if (assign) this.translations = translations;
+        resolve(translations);
+      }
+    });
+  }
+
+  loadLocale() {
+    // eslint-disable-next-line no-unused-vars
+    return new Promise((resolve, reject) => {
+      // Resolve right away, translations are already loaded by #preload
+      resolve();
+    });
+  }
+
   getTranslation(
+    key,
+    locale,
+    options = {},
+    translations = this.translations,
+    fullKey = key
+  ) {
+    // eslint-disable-next-line no-unused-vars
+    return new Promise((resolve, reject) => {
+      resolve(
+        this._fetchTranslation(key, locale, options, translations, fullKey)
+      );
+    });
+  }
+
+  _fetchTranslation(
     key,
     locale,
     options = {},
@@ -42,7 +94,7 @@ export default class Translator {
           );
           /* develblock:end */
 
-          return this.getTranslation(
+          return this._fetchTranslation(
             key,
             superLocale,
             options,
@@ -60,7 +112,7 @@ export default class Translator {
           );
           /* develblock:end */
 
-          return this.getTranslation(
+          return this._fetchTranslation(
             key,
             options.defaultLocale,
             options,
@@ -91,7 +143,7 @@ export default class Translator {
       );
       /* develblock:end */
 
-      return this.getTranslation(
+      return this._fetchTranslation(
         subKey,
         locale,
         options,
@@ -109,7 +161,7 @@ export default class Translator {
       );
       /* develblock:end */
 
-      return this.getTranslation(
+      return this._fetchTranslation(
         key,
         options.defaultLocale,
         options,

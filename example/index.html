@@ -161,27 +161,16 @@
     }
 
     [data-key]:not(button):not(.no-key-decoration):before {
-      content: attr(data-key);
+      content: '🔑 ' attr(data-key);
       display: inline-block;
       width: 20ch;
       margin-right: 0.5em;
-      padding: 0.2em 0;
-      padding-left: 2.5ch;
+      padding: 0.2em 0.4em;
 
       font-family: 'Fira Mono', 'Courier New', Courier, monospace;
-      text-align: center;
+      text-align: left;
       background-color: #ddd;
       border-radius: 0.2em;
-    }
-
-    [data-key]:not(button):not(.no-key-decoration):after {
-      content: '🔑';
-      display: inline-block;
-      position: absolute;
-      padding: 0.2em 0;
-      padding-left: 0.4em;
-      top: 0;
-      left: 0;
     }
 
     [data-missing-translation] {
@@ -285,7 +274,7 @@
     <input type="checkbox" name="showCode" id="showCode">
     <label for="showCode" class="no-key-decoration" data-key="source.label">Show translation source</label>
     <pre>
-<code id="code">Missing translation source</code>
+<code id="code">No translation data loaded</code>
     </pre>
   </div>
 
@@ -299,12 +288,10 @@
       const select = document.getElementById('lang');
       const button = document.getElementById('button');
 
-      new Allspeak('translations.json', {
-        rootElement: main,
-        debug: true
+      new Allspeak('translations/{}.json', {
+        debug: true,
+        asyncLoad: true
       }).then(speak => {
-        code.innerHTML = JSON.stringify(speak.translations, null, 2);
-
         select.addEventListener('change', function () {
           speak.trans(select[select.selectedIndex].value, 'controls', 'source');
         });
@@ -312,6 +299,10 @@
         button.addEventListener('click', function () {
           speak.trans(select[select.selectedIndex].value, 'heading', 'main');
         });
+
+        speak.onTranslationLoaded(translations => {
+          code.innerHTML = JSON.stringify(translations, null, 2);
+        })
       });
     });
   </script>
