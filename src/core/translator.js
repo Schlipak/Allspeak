@@ -35,11 +35,11 @@ export default class Translator {
     });
   }
 
-  loadLocale() {
+  loadLocale(locale) {
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
       // Resolve right away, translations are already loaded by #preload
-      resolve();
+      resolve(locale);
     });
   }
 
