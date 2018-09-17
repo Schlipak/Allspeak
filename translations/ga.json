@@ -1,0 +1,20 @@
+{
+  "title": "I18n leabharlann tosaigh",
+  "controls": {
+    "label": "Teanga",
+    "button": {
+      "translate": "Aistrigh"
+    }
+  },
+  "demo": "Seo sampla aistriúcháin i nGaeilge",
+  "nested": {
+    "key": "Seo sampla aistriúcháin de eochair neadaithe i nGaeilge"
+  },
+  "missing": {
+    "english": "Níl an t-aistriúchán seo ann i mBéarla",
+    "french": "Níl an t-aistriúchán seo ann i bhFraincis"
+  },
+  "source": {
+    "label": "Taispeáin foinse aistriúcháin"
+  }
+}

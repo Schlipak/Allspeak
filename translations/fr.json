@@ -1,0 +1,19 @@
+{
+  "title": "Librairie i18n front-end",
+  "controls": {
+    "label": "Langue",
+    "button": {
+      "translate": "Traduire"
+    }
+  },
+  "demo": "Ceci est une traduction d'example en français",
+  "nested": {
+    "key": "Ceci est une traduction d'example pour une clé imbriquée en français"
+  },
+  "missing": {
+    "english": "Cette traduction n'existe pas en englais"
+  },
+  "source": {
+    "label": "Afficher les données de traduction"
+  }
+}

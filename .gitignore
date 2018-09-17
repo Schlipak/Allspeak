@@ -1,5 +1,3 @@
-*
-!index.html
-!translations.json
-!allspeak.pkg.js
-!.gitignore
+dist/
+node_modules/
+tmp/

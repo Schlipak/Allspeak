@@ -1,0 +1,19 @@
+{
+  "title": "Front-end i18n library",
+  "controls": {
+    "label": "Language",
+    "button": {
+      "translate": "Translate"
+    }
+  },
+  "demo": "This is a demo translation in English",
+  "nested": {
+    "key": "This is a demo translation for a nested key in English"
+  },
+  "missing": {
+    "french": "This translation does not exist in French"
+  },
+  "source": {
+    "label": "Show translation source"
+  }
+}
