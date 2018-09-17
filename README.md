@@ -4,7 +4,7 @@ Front-end standalone i18n library
 
 | Build type            | File size |
 | --------------------- | --------: |
-| Development           | 35.9 kB   |
+| Development           | 30 kB     |
 | Production (minified) | 12.5 kB   |
 | Production (gzipped)  | 3.1 kB    |
 
