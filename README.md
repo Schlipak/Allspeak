@@ -102,7 +102,7 @@ const options = {
 */
 new Allspeak(translations, options).then(speak => {
   /**
-   * scopes : HTMLElement|string
+   * scopes: [] of HTMLElement|string
    *
    * Scope in which translations are applied
    * Optional, defaults to options.rootElement
