@@ -27,9 +27,7 @@ export default class Allspeak {
   constructor(translations = {}, options = {}) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
 
-    /* develblock:start */
     Logger.setDebugMode(this.options.debug);
-    /* develblock:end */
 
     if (this.options.hideDuringTrans) {
       this.options.rootElement.style = 'display: none;';
@@ -64,9 +62,7 @@ export default class Allspeak {
       writable: true,
     });
 
-    /* develblock:start */
     Logger.style('Allspeak // Front-end i18n library', ALLSPEAK_INFO_STYLE);
-    /* develblock:end */
 
     // eslint-disable-next-line no-unused-vars
     return new Promise((resolve, reject) => {
@@ -100,17 +96,13 @@ export default class Allspeak {
         );
         this.scopes[scope] = scopeElement;
 
-        /* develblock:start */
         Logger.info('Caching element', scopeElement, `with scope "${scope}"`);
-        /* develblock:end */
 
         scope = scopeElement;
       }
     }
 
-    /* develblock:start */
     Logger.info('=== Translating scope', scope, `to locale ${locale}`);
-    /* develblock:end */
 
     this.documentWalker
       .prepareWalk(locale, scope, this.options)
@@ -128,20 +120,14 @@ export default class Allspeak {
               const promise = this.translator
                 .getTranslation(key, locale, this.options)
                 .then(translation => {
-                  /* develblock:start */
                   Logger.log(`-- Starting translation for '${key}'`);
-                  /* develblock:end */
 
                   if (!this.options.escapeTranslation) {
-                    /* develblock:start */
                     Logger.log('- Applying raw translation...');
-                    /* develblock:end */
 
                     node.innerHTML = translation.text;
                   } else {
-                    /* develblock:start */
                     Logger.log('- Applying escaped translation...');
-                    /* develblock:end */
 
                     const escapedTranslation = document.createElement('DIV');
 
@@ -157,9 +143,7 @@ export default class Allspeak {
                     node.removeAttribute(this.options.dataMissingTranslation);
                   }
 
-                  /* develblock:start */
                   Logger.log('-- Translation done');
-                  /* develblock:end */
                 }); // end getTranslation
 
               transPromises.push(promise);
@@ -167,9 +151,7 @@ export default class Allspeak {
           ); // end walk
 
           Promise.all(transPromises).then(() => {
-            /* develblock:start */
             Logger.info('=== Finished document translation');
-            /* develblock:end */
 
             scope.setAttribute('lang', locale);
             if (this.options.hideDuringTrans) {
@@ -183,9 +165,7 @@ export default class Allspeak {
         }); // end loadLocale
       })
       .catch(() => {
-        /* develblock:start */
         Logger.warn('=== Walk skipped, skipping translation as well');
-        /* develblock:end */
       }); // end prepareWalk
   }
 }

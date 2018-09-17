@@ -39,20 +39,17 @@ export default class AsyncTranslator extends Translator {
         .catch(error => {
           if (locale.includes('-')) {
             const superLocale = locale.split('-')[0];
-            /* develblock:start */
+
             Logger.warn(
               `Missing locale for '${locale}', trying with superLocale '${superLocale}'`
             );
-            /* develblock:end */
 
             this.loadLocale(superLocale)
               .then(() => {
                 resolve(superLocale);
               })
               .catch(error => {
-                /* develblock:start */
                 Logger.error(error);
-                /* develblock:end */
 
                 reject(error);
               });
@@ -71,23 +68,19 @@ export default class AsyncTranslator extends Translator {
     if (locale.includes('-')) {
       const superLocale = locale.split('-')[0];
 
-      /* develblock:start */
       Logger.warn(
         `Missing locale for '${fullKey}.${locale}', trying with superLocale '${superLocale}'`
       );
-      /* develblock:end */
 
       return this._findLocale(translations, superLocale, options, fullKey);
     }
 
     if (options.defaultOnMissing && locale !== options.defaultLocale) {
-      /* develblock:start */
       Logger.warn(
         `Missing locale for '${fullKey}.${locale}', replacing with '${
           options.defaultLocale
         }'`
       );
-      /* develblock:end */
 
       return this._findLocale(
         translations,
@@ -110,13 +103,9 @@ export default class AsyncTranslator extends Translator {
     options = Object.assign({}, DEFAULT_OPTIONS, options);
 
     if (fullKey === key) {
-      /* develblock:start */
       Logger.log(`Translating key '${locale}.${key}'`);
-      /* develblock:end */
     } else {
-      /* develblock:start */
       Logger.log(`> Translating sub-key '${locale}.${key}'`);
-      /* develblock:end */
     }
 
     const [resolvedTranslations, resolvedLocale] = this._findLocale(
@@ -127,9 +116,7 @@ export default class AsyncTranslator extends Translator {
     );
 
     if (!resolvedTranslations) {
-      /* develblock:start */
       Logger.error(`Missing translation for '${resolvedLocale}.${fullKey}'`);
-      /* develblock:end */
 
       return {
         text: `Missing translation: ${resolvedLocale}.${fullKey}`,
@@ -146,9 +133,7 @@ export default class AsyncTranslator extends Translator {
 
   _deepFetchTranslation(translations, locale, key, fullKey = key) {
     if (typeof translations[key] === typeof '') {
-      /* develblock:start */
       Logger.log(`Found translation for '${locale}.${fullKey}'`);
-      /* develblock:end */
 
       return {
         text: translations[key],
@@ -160,18 +145,19 @@ export default class AsyncTranslator extends Translator {
     if (typeof translations[primary] === typeof {}) {
       const subKey = segments.join('.');
 
-      /* develblock:start */
       Logger.info(
         `Missing top-level translation for '${locale}.${fullKey}', trying sub-key '${locale}->>${subKey}'`
       );
-      /* develblock:end */
 
-      return this._deepFetchTranslation(translations[primary], locale, subKey, fullKey);
+      return this._deepFetchTranslation(
+        translations[primary],
+        locale,
+        subKey,
+        fullKey
+      );
     }
 
-    /* develblock:start */
     Logger.error(`Missing translation for '${locale}.${fullKey}'`);
-    /* develblock:end */
 
     return { text: `Missing translation: ${locale}.${fullKey}`, missing: true };
   }

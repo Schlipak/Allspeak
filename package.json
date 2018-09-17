@@ -17,6 +17,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
+    "babel-plugin-strip-function-call": "^1.0.2",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.4.0",
     "webpack": "^4.17.1",
@@ -26,12 +27,13 @@
   "scripts": {
     "clean": "rm -rf dist/* tmp/*",
     "lint": "eslint src/ $npm_package_main",
-    "trans": "babel $npm_package_main src/ --out-dir tmp/",
+    "trans_dev": "babel $npm_package_main src/ --out-dir tmp/",
+    "trans": "NODE_ENV=production babel $npm_package_main src/ --out-dir tmp/",
     "pack_dev": "webpack --mode development tmp/$npm_package_main -o dist/allspeak.pkg.js",
     "pack": "NODE_ENV=production webpack --mode production tmp/$npm_package_main -o dist/allspeak.pkg.min.js",
-    "prelude": "mkdir -p dist/ tmp/ && npm run clean && npm run lint && npm run trans",
-    "dev": "npm run prelude && npm run pack_dev",
-    "build": "npm run prelude && npm run pack",
+    "prelude": "mkdir -p dist/ tmp/ && npm run clean && npm run lint",
+    "dev": "npm run prelude && npm run trans_dev && npm run pack_dev",
+    "build": "npm run prelude && npm run trans && npm run pack",
     "prod": "npm run build"
   }
 }

@@ -1,7 +1,20 @@
+const webpack = require('webpack');
 const path = require('path');
-const devMode = process.env.NODE_ENV !== 'production';
 
-console.log(`>>> Building in ${devMode ? 'development' : 'production'} mode`);
+const isProduction = process.env.NODE_ENV === 'production';
+console.log(
+  `>>> Building in ${isProduction ? 'production' : 'development'} mode`
+);
+
+const plugins = [];
+if (isProduction) {
+  plugins.push(
+    new webpack.NormalModuleReplacementPlugin(
+      /logger/,
+      `${process.cwd()}/src/utils/empty_logger.js`
+    )
+  );
+}
 
 module.exports = {
   entry: './src/index.js',
@@ -9,13 +22,14 @@ module.exports = {
     filename: 'allspeak.pkg.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins,
   module: {
     rules: [
       {
         test: /\.js$/,
         enforce: 'pre',
         exclude: /(node_modules|bower_components|\.spec\.js)/,
-        use: devMode ? [] : [{ loader: 'webpack-strip-block' }],
+        use: isProduction ? [{ loader: 'webpack-strip-block' }] : [],
       },
     ],
   },

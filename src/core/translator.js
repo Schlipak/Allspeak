@@ -68,31 +68,23 @@ export default class Translator {
     options = Object.assign({}, DEFAULT_OPTIONS, options);
 
     if (fullKey === key) {
-      /* develblock:start */
       Logger.log(`Translating key '${key}.${locale}'`);
-      /* develblock:end */
     } else {
-      /* develblock:start */
       Logger.log(`> Translating sub-key '${key}.${locale}'`);
-      /* develblock:end */
     }
 
     if (typeof translations[key] === typeof {}) {
       if (typeof translations[key][locale] === typeof '') {
-        /* develblock:start */
         Logger.log(`Found translation for '${fullKey}.${locale}'`);
-        /* develblock:end */
 
         return { text: translations[key][locale], missing: false };
       } else {
         if (locale.includes('-')) {
           const superLocale = locale.split('-')[0];
 
-          /* develblock:start */
           Logger.warn(
             `Missing locale for '${fullKey}.${locale}', trying with superLocale '${superLocale}'`
           );
-          /* develblock:end */
 
           return this._fetchTranslation(
             key,
@@ -104,13 +96,11 @@ export default class Translator {
         }
 
         if (options.defaultOnMissing && locale !== options.defaultLocale) {
-          /* develblock:start */
           Logger.warn(
             `Missing locale for '${fullKey}.${locale}', replacing with '${
               options.defaultLocale
             }'`
           );
-          /* develblock:end */
 
           return this._fetchTranslation(
             key,
@@ -121,9 +111,7 @@ export default class Translator {
           );
         }
 
-        /* develblock:start */
         Logger.error(`Missing translation for '${fullKey}.${locale}'`);
-        /* develblock:end */
 
         return {
           text: `Missing translation: ${fullKey}.${locale}`,
@@ -137,11 +125,9 @@ export default class Translator {
     if (translations[primary]) {
       const subKey = segments.join('.');
 
-      /* develblock:start */
       Logger.info(
         `Missing top-level translation for '${fullKey}.${locale}', trying sub-key '${subKey}.${locale}'`
       );
-      /* develblock:end */
 
       return this._fetchTranslation(
         subKey,
@@ -153,13 +139,11 @@ export default class Translator {
     }
 
     if (options.defaultOnMissing && locale !== options.defaultLocale) {
-      /* develblock:start */
       Logger.warn(
         `Missing locale for '${fullKey}.${locale}', replacing with '${
           options.defaultLocale
         }'`
       );
-      /* develblock:end */
 
       return this._fetchTranslation(
         key,
@@ -170,9 +154,7 @@ export default class Translator {
       );
     }
 
-    /* develblock:start */
     Logger.error(`Missing translation for '${fullKey}.${locale}'`);
-    /* develblock:end */
 
     return { text: `Missing translation: ${fullKey}.${locale}`, missing: true };
   }

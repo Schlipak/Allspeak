@@ -2,6 +2,12 @@
 
 Front-end standalone i18n library
 
+| Build type            | File size |
+| --------------------- | --------: |
+| Development           | 35.9 kB   |
+| Production (minified) | 12.5 kB   |
+| Production (gzipped)  | 3.1 kB    |
+
 ## Installation
 
 Download or clone the Allspeak repository
