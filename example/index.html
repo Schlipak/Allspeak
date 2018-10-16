@@ -288,16 +288,17 @@
       const select = document.getElementById('lang');
       const button = document.getElementById('button');
 
-      new Allspeak('translations/{}.json', {
-        debug: true,
-        asyncLoad: true
-      }).then(speak => {
+      new Allspeak('translations/{}.json', { defaultOnMissing: true, defaultLocale: 'en' }).then(speak => {
         select.addEventListener('change', function () {
-          speak.trans(select[select.selectedIndex].value, 'controls', 'source');
+          speak.trans(select[select.selectedIndex].value, 'controls', 'source').then(scopes => {
+            console.log('Scopes translated from select change:', scopes);
+          });
         });
 
         button.addEventListener('click', function () {
-          speak.trans(select[select.selectedIndex].value, 'heading', 'main');
+          speak.trans(select[select.selectedIndex].value, 'heading', 'main').then(scopes => {
+            console.log('Scopes translated from button click:', scopes);
+          });
         });
 
         speak.onTranslationLoaded(translations => {

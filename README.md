@@ -4,9 +4,9 @@ Front-end standalone i18n library
 
 | Build type            | File size |
 | --------------------- | --------: |
-| Development           | 30 kB     |
-| Production (minified) | 12.5 kB   |
-| Production (gzipped)  | 3.1 kB    |
+| Development           | 23.2 kB   |
+| Production (minified) | 9.5 kB    |
+| Production (gzipped)  | 2.8 kB    |
 
 ## Installation
 
@@ -40,29 +40,30 @@ Or use the ES6 import in your JavaScript
 import Allspeak from 'allspeak';
 ```
 
+Create your translation files
+
+```json
+// /translations/en.json
+{
+  "key": "Value",
+  "nested": {
+    "key": "Another value"
+  }
+}
+
+// /translations/fr.json
+{
+  "key": "Valeur",
+  "nested": {
+    "key": "Une autre valeur"
+  }
+}
+```
+
 Script your translations
 
 ```js
-// Define your translations
-const translations = {
-  key: {
-    en: 'Value',
-    fr: 'Valeur',
-  },
-  nested: {
-    key: {
-      en: 'Another value',
-      fr: 'Une autre valeur',
-    },
-  },
-};
-
-// Translations can also be loaded from a JSON file
-// Simply replace the translation object with a string URL of the file
-
 const options = {
-  asyncLoad: false,           // Changes the translation loading strategy to async
-                              // > See `Asynchronously load translations`
   dataKey: 'data-key',        // Attribute key used to lookup the translations
 
                               // Attribute added to a node when its translation is missing
@@ -71,8 +72,6 @@ const options = {
                               // Attribute added to a node during its translation
   dataTranslatingKey: 'data-translating',
 
-  debug: false,               // Prints debug information to the console.
-                              // > Does nothing in production builds.
   defaultLocale: 'en',        // Locale to default to if no translation is found
   defaultOnMissing: false,    // Attempt to translate to defaultLocale on missing translation
                               // > A `Missing translation` message will be displayed if false
@@ -87,20 +86,14 @@ const options = {
  * Use Allspeak#trans to translate the document
  * Allspeak handles regional locales:
  *
- * const translations = {
- *   colour: {
- *     'en-GB': 'colour',
- *     'en-US': 'color',
- *   },
- *   foo: {
- *     en: 'bar',
- *   },
- * };
+ * A locale such as en-GB will attempt to load the en-GB.json file,
+ * but will gracefully fallback to the default en.json if a localized
+ * translation is not found.
  *
- * The key 'foo' will be translated as 'bar' no matter the regional english locale, but the
- * key 'colour' will be translated accordingly.
+ * The path given to the Allspeak constructor must be a template path to your translations,
+ * where {} will be replaced by the locale.
 */
-new Allspeak(translations, options).then(speak => {
+new Allspeak('translations/{}.json', options).then(speak => {
   /**
    * scopes : HTMLElement|string
    *
@@ -115,34 +108,14 @@ new Allspeak(translations, options).then(speak => {
    */
   const scopes = [document.body];
 
-  speak.trans(navigator.language, ...scopes);
-});
-```
-
-## Asynchronously load translations
-
-By default, Allspeak will load a single JSON blob, which is expected to contain all your translations.
-
-If your application has a loarge amount of translations, this may be detrimental, as it will load a large amount
-of data at once, and slow down your application.
-
-You can instead separate your translations into different files, and use the `asyncLoad` option.
-With `asyncLoad: true`, Allspeak will expect a translation URL in the form `path/to/translations.{}.json` where `{}` is a placeholder which will be replaced by the locale.
-In this example, you will need to create a file named `translations.en.json` for your English locales.
-
-Locale resolutions will work the same as in synchronous mode ; it will attempt to use regional locales where relevant, and fallback to a more general locale if not found.
-
-Please note that the `Allspeak#trans` method will now return a Promise when used in async mode.
-
-```js
-new Allspeak('translations/{}.json', { asyncLoad: true }).then(speak => {
-  speak.trans(navigator.language).then(() => {
-    // After async translation
+  speak.trans(navigator.language, ...scopes).then(translatedScopes => {
+    // Run after all translations are done
   });
 });
 ```
 
-You can retreive the current in-memory translation data using the `Allspeak.translations` property. You can also subscribe to `onTranslationLoaded` to be notified when translation data changes:
+You can retreive the current in-memory translation data using the `Allspeak.translations` property.
+You can also subscribe to `onTranslationLoaded` to be notified when translation data changes:
 
 ```js
 new Allspeak('translations/{}.json', { asyncLoad: true }).then(speak => {

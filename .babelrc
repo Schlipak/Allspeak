@@ -1,23 +1,4 @@
 {
   "presets": ["env"],
-  "env": {
-    "production": {
-      "plugins": [
-        [
-          "strip-function-call",
-          {
-            "strip": [
-              "Logger.setDebugMode",
-              "Logger.debug",
-              "Logger.log",
-              "Logger.info",
-              "Logger.warn",
-              "Logger.error",
-              "Logger.style"
-            ]
-          }
-        ]
-      ]
-    }
-  }
+  "plugins": ["transform-object-rest-spread"]
 }

@@ -1,1 +1,1 @@
-export { default, DEFAULT_OPTIONS } from './src';
+export { default } from './src';

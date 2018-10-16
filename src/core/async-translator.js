@@ -1,28 +1,43 @@
-import { Logger } from '../utils';
-import { Translator, DEFAULT_OPTIONS } from '.';
+import DEFAULT_OPTIONS from './default-options';
 
-export default class AsyncTranslator extends Translator {
+export default class AsyncTranslator {
   constructor(path) {
-    super(null);
     this.path = path;
-
     this.translations = {};
+    this.onTranslationLoadedCallback = null;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  preload(translations = null) {
-    // eslint-disable-next-line no-unused-vars
+  onTranslationLoaded(callback) {
+    this.onTranslationLoadedCallback = callback;
+  }
+
+  triggerOnTranslationLoaded() {
+    if (this.onTranslationLoadedCallback) {
+      this.onTranslationLoadedCallback(this.translations);
+    }
+  }
+
+  preload(translations = this.translations) {
     return new Promise((resolve, reject) => {
-      // Resolve without doing anything, locales are loaded dynamically
-      resolve();
+      fetch(translations, { method: 'GET' })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          return reject(`Request rejected with status ${response.status}`);
+        })
+        .then(json => resolve(json))
+        .catch(err => reject(`Request error: ${err}`));
     });
   }
 
   loadLocale(locale) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.translations[locale]) {
         return resolve(locale);
-      } else if (locale.includes('-')) {
+      }
+
+      if (locale.includes('-')) {
         const superLocale = locale.split('-')[0];
 
         if (this.translations[superLocale]) {
@@ -30,111 +45,96 @@ export default class AsyncTranslator extends Translator {
         }
       }
 
-      super
-        .preload(this.path.replace('{}', locale), false)
-        .then(translations => {
+      return this.preload(this.path.replace('{}', locale), false).then(
+        (translations) => {
           this.translations[locale] = translations;
+          this.triggerOnTranslationLoaded();
           return resolve(locale);
-        })
-        .catch(error => {
+        },
+        () => {
           if (locale.includes('-')) {
-            const superLocale = locale.split('-')[0];
-
-            Logger.warn(
-              `Missing locale for '${locale}', trying with superLocale '${superLocale}'`
-            );
-
-            this.loadLocale(superLocale)
-              .then(() => {
-                resolve(superLocale);
-              })
-              .catch(error => {
-                Logger.error(error);
-
-                reject(error);
-              });
-          } else {
-            reject(error);
+            this.loadLocale(locale.split('-')[0]).then(superLocale => resolve(superLocale));
           }
-        });
+        },
+      );
     });
   }
 
-  _findLocale(translations, locale, options, fullKey) {
-    if (typeof translations[locale] === typeof {}) {
-      return [translations[locale], locale];
-    }
+  findLocale(translations, locale, options, fullKey) {
+    return new Promise((resolve) => {
+      if (typeof translations[locale] !== typeof {}) {
+        return this.loadLocale(locale).then((resolvedLocale) => {
+          const args = [translations, resolvedLocale, options, fullKey];
+          return resolve(this.findLocale(...args));
+        });
+      }
 
-    if (locale.includes('-')) {
-      const superLocale = locale.split('-')[0];
+      if (typeof translations[locale] === typeof {}) {
+        return resolve([translations[locale], locale]);
+      }
 
-      Logger.warn(
-        `Missing locale for '${fullKey}.${locale}', trying with superLocale '${superLocale}'`
-      );
+      if (locale.includes('-')) {
+        const superLocale = locale.split('-')[0];
+        const args = [translations, superLocale, options, fullKey];
 
-      return this._findLocale(translations, superLocale, options, fullKey);
-    }
+        return this.findLocale(...args).then(resLoc => resolve(resLoc));
+      }
 
-    if (options.defaultOnMissing && locale !== options.defaultLocale) {
-      Logger.warn(
-        `Missing locale for '${fullKey}.${locale}', replacing with '${
-          options.defaultLocale
-        }'`
-      );
+      if (options.defaultOnMissing && locale !== options.defaultLocale) {
+        const args = [translations, options.defaultLocale, options, fullKey];
 
-      return this._findLocale(
-        translations,
-        options.defaultLocale,
-        options,
-        fullKey
-      );
-    }
+        return this.findLocale(...args).then(resLoc => resolve(resLoc));
+      }
 
-    return [null, locale];
+      return resolve([null, locale]);
+    });
   }
 
-  _fetchTranslation(
-    key,
-    locale,
-    options = {},
-    translations = this.translations,
-    fullKey = key
-  ) {
-    options = Object.assign({}, DEFAULT_OPTIONS, options);
-
-    if (fullKey === key) {
-      Logger.log(`Translating key '${locale}.${key}'`);
-    } else {
-      Logger.log(`> Translating sub-key '${locale}.${key}'`);
-    }
-
-    const [resolvedTranslations, resolvedLocale] = this._findLocale(
-      translations,
-      locale,
-      options,
-      fullKey
-    );
-
-    if (!resolvedTranslations) {
-      Logger.error(`Missing translation for '${resolvedLocale}.${fullKey}'`);
-
-      return {
-        text: `Missing translation: ${resolvedLocale}.${fullKey}`,
-        missing: true,
-      };
-    }
-
-    return this._deepFetchTranslation(
-      resolvedTranslations,
-      resolvedLocale,
-      fullKey
-    );
+  getTranslation(key, locale, options = {}, translations = this.translations, fullKey = key) {
+    return new Promise((resolve) => {
+      resolve(this.fetchTranslation(key, locale, options, translations, fullKey));
+    }).catch((err) => {
+      throw new Error(`getTranslation failed with ${err}`);
+    });
   }
 
-  _deepFetchTranslation(translations, locale, key, fullKey = key) {
+  fetchTranslation(key, locale, userOptions = {}, translations = this.translations, fullKey = key) {
+    return new Promise((resolve) => {
+      const options = { ...DEFAULT_OPTIONS, ...userOptions };
+
+      this.findLocale(translations, locale, options, fullKey).then(
+        ([resolvedTranslations, resolvedLocale]) => {
+          if (!resolvedTranslations) {
+            resolve({
+              text: `Missing translation: ${resolvedLocale}.${fullKey}`,
+              missing: true,
+            });
+          }
+
+          const translation = this.deepFetchTranslation(
+            resolvedTranslations,
+            resolvedLocale,
+            fullKey,
+          );
+
+          if (
+            translation.missing
+            && options.defaultOnMissing
+            && resolvedLocale !== options.defaultLocale
+          ) {
+            resolve(
+              this.fetchTranslation(key, options.defaultLocale, userOptions, translations, fullKey),
+            );
+          }
+
+          resolve(translation);
+        },
+      );
+    });
+  }
+
+  deepFetchTranslation(translations, locale, key, fullKey = key) {
     if (typeof translations[key] === typeof '') {
-      Logger.log(`Found translation for '${locale}.${fullKey}'`);
-
       return {
         text: translations[key],
         missing: false,
@@ -144,20 +144,8 @@ export default class AsyncTranslator extends Translator {
     const [primary, ...segments] = key.split('.');
     if (typeof translations[primary] === typeof {}) {
       const subKey = segments.join('.');
-
-      Logger.info(
-        `Missing top-level translation for '${locale}.${fullKey}', trying sub-key '${locale}->>${subKey}'`
-      );
-
-      return this._deepFetchTranslation(
-        translations[primary],
-        locale,
-        subKey,
-        fullKey
-      );
+      return this.deepFetchTranslation(translations[primary], locale, subKey, fullKey);
     }
-
-    Logger.error(`Missing translation for '${locale}.${fullKey}'`);
 
     return { text: `Missing translation: ${locale}.${fullKey}`, missing: true };
   }

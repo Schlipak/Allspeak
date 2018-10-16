@@ -11,7 +11,7 @@
     "key": "Ceci est une traduction d'example pour une clé imbriquée en français"
   },
   "missing": {
-    "english": "Cette traduction n'existe pas en englais"
+    "english": "Cette traduction n'existe pas en anglais"
   },
   "source": {
     "label": "Afficher les données de traduction"
